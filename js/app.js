@@ -214,11 +214,11 @@ const TaskManager = window.TaskManager = {
         TaskManager.deleteTask(task.id);
       });
 
+      li.appendChild(toggleBtn);
       li.appendChild(labelSpan);
       li.appendChild(editInput);
       li.appendChild(editBtn);
       li.appendChild(confirmBtn);
-      li.appendChild(toggleBtn);
       li.appendChild(deleteBtn);
       list.appendChild(li);
     });
@@ -282,7 +282,8 @@ const QuickLinks = window.QuickLinks = {
 
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'link-delete-btn';
-      deleteBtn.textContent = 'Delete';
+      deleteBtn.textContent = '×';
+      deleteBtn.setAttribute('aria-label', 'Delete ' + link.label);
       deleteBtn.addEventListener('click', function () {
         QuickLinks.deleteLink(link.id);
       });

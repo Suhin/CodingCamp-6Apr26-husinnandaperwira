@@ -9,44 +9,47 @@
 <body>
   <main class="dashboard">
 
-    <!-- Greeting Module -->
-    <section id="greeting-module" class="module">
-      <header>
-        <p id="greeting-text"></p>
-        <time id="time-display"></time>
-        <p id="date-display"></p>
-      </header>
+    <!-- Greeting Module — full width top -->
+    <section id="greeting-module" class="module module--greeting">
+      <time id="time-display"></time>
+      <p id="date-display"></p>
+      <p id="greeting-text"></p>
     </section>
 
-    <!-- Focus Timer -->
-    <section id="focus-timer" class="module">
-      <h2>Focus Timer</h2>
-      <div id="timer-display">25:00</div>
-      <div id="timer-completion" class="hidden">Session complete!</div>
-      <div class="timer-controls">
-        <button id="timer-start">Start</button>
-        <button id="timer-stop">Stop</button>
-        <button id="timer-reset">Reset</button>
-      </div>
-    </section>
+    <!-- Row: Focus Timer (left) + Task Manager (right) -->
+    <div class="row-two">
 
-    <!-- Task Manager -->
-    <section id="task-manager" class="module">
-      <h2>Tasks</h2>
-      <form id="task-form">
-        <input id="task-input" type="text" placeholder="Add a new task…" autocomplete="off" />
-        <button type="submit">Add</button>
-      </form>
-      <ul id="task-list"></ul>
-    </section>
+      <!-- Focus Timer -->
+      <section id="focus-timer" class="module">
+        <h2>Focus Timer</h2>
+        <div id="timer-display">25:00</div>
+        <div id="timer-completion" class="hidden">Session complete!</div>
+        <div class="timer-controls">
+          <button id="timer-start">Start</button>
+          <button id="timer-stop">Stop</button>
+          <button id="timer-reset">Reset</button>
+        </div>
+      </section>
 
-    <!-- Quick Links -->
-    <section id="quick-links" class="module">
+      <!-- Task Manager -->
+      <section id="task-manager" class="module">
+        <h2>Tasks</h2>
+        <form id="task-form">
+          <input id="task-input" type="text" placeholder="Add a new task..." autocomplete="off" />
+          <button type="submit">Add</button>
+        </form>
+        <ul id="task-list"></ul>
+      </section>
+
+    </div>
+
+    <!-- Quick Links — bottom left -->
+    <section id="quick-links" class="module module--links">
       <h2>Quick Links</h2>
       <form id="links-form">
-        <input id="link-label-input" type="text" placeholder="Label" autocomplete="off" />
-        <input id="link-url-input" type="url" placeholder="https://…" autocomplete="off" />
-        <button type="submit">Add</button>
+        <input id="link-label-input" type="text" placeholder="Link name" autocomplete="off" />
+        <input id="link-url-input" type="url" placeholder="URL" autocomplete="off" />
+        <button type="submit">Add Link</button>
       </form>
       <ul id="links-list"></ul>
     </section>
