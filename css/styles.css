@@ -295,10 +295,15 @@ body {
 /* -------------------------------------------------------------------------
    Quick Links
 ------------------------------------------------------------------------- */
-.module--links {
-  /* sits below row-two, same width as timer card */
+.row-bottom {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: var(--gap);
+  align-items: start;
+}
+
+#quick-links {
   align-self: start;
-  max-width: calc(50% - var(--gap) / 2);
 }
 
 #links-form {
@@ -499,12 +504,9 @@ body {
    Responsive
 ------------------------------------------------------------------------- */
 @media (max-width: 640px) {
-  .row-two {
+  .row-two,
+  .row-bottom {
     grid-template-columns: 1fr;
-  }
-
-  .module--links {
-    max-width: 100%;
   }
 
   #time-display,
