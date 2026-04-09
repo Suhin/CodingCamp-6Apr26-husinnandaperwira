@@ -400,8 +400,97 @@ body {
 }
 
 /* -------------------------------------------------------------------------
-   Utility
+   Greeting — name form
 ------------------------------------------------------------------------- */
+#name-form {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+#name-input {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text);
+  background: #fff;
+  width: 180px;
+  transition: border-color 0.15s;
+}
+
+#name-input::placeholder { color: #aaa; }
+#name-input:focus { outline: none; border-color: var(--accent); }
+
+#name-form button[type="submit"] {
+  padding: 0.4rem 0.9rem;
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#name-form button[type="submit"]:hover {
+  background: var(--accent-hover);
+}
+
+/* -------------------------------------------------------------------------
+   Timer — duration form
+------------------------------------------------------------------------- */
+#timer-duration-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+#timer-duration-input {
+  width: 70px;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--text);
+  text-align: center;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+#timer-duration-input:focus { outline: none; border-color: var(--accent); }
+
+#timer-duration-form button[type="submit"] {
+  padding: 0.4rem 0.8rem;
+  background: #f0f0f0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+#timer-duration-form button[type="submit"]:hover {
+  background: #e0e0e0;
+}
+
+/* -------------------------------------------------------------------------
+   Task duplicate message
+------------------------------------------------------------------------- */
+#task-duplicate-msg {
+  font-size: 0.8rem;
+  color: var(--danger);
+  font-weight: 500;
+  margin-top: -0.25rem;
+}
+
+
 .hidden {
   display: none !important;
 }

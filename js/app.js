@@ -54,8 +54,12 @@ const GreetingModule = window.GreetingModule = {
     const greetingEl = document.getElementById('greeting-text');
     const timeEl = document.getElementById('time-display');
     const dateEl = document.getElementById('date-display');
+    const name = Storage.get('userName');
 
-    if (greetingEl) greetingEl.textContent = GreetingModule.getGreeting(now.getHours());
+    if (greetingEl) {
+      const base = GreetingModule.getGreeting(now.getHours());
+      greetingEl.textContent = name ? base + ', ' + name + '!' : base;
+    }
     if (timeEl) timeEl.textContent = GreetingModule.formatTime(now);
     if (dateEl) dateEl.textContent = GreetingModule.formatDate(now);
   },
@@ -63,6 +67,25 @@ const GreetingModule = window.GreetingModule = {
   init() {
     GreetingModule._render();
     setInterval(GreetingModule._render, 60 * 1000);
+
+    // Pre-fill saved name
+    const nameInput = document.getElementById('name-input');
+    const savedName = Storage.get('userName');
+    if (nameInput && savedName) nameInput.value = savedName;
+
+    const form = document.getElementById('name-form');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const val = nameInput ? nameInput.value.trim() : '';
+        if (val) {
+          Storage.set('userName', val);
+        } else {
+          Storage.set('userName', null);
+        }
+        GreetingModule._render();
+      });
+    }
   },
 };
 
@@ -71,6 +94,7 @@ const GreetingModule = window.GreetingModule = {
 // ---------------------------------------------------------------------------
 const FocusTimer = window.FocusTimer = {
   remaining: 1500,
+  duration: 1500,
   _intervalId: null,
 
   formatTime(seconds) {
@@ -85,7 +109,7 @@ const FocusTimer = window.FocusTimer = {
   },
 
   start() {
-    if (FocusTimer._intervalId !== null) return; // no-op if already running
+    if (FocusTimer._intervalId !== null) return;
     FocusTimer._intervalId = setInterval(function () {
       FocusTimer.remaining -= 1;
       FocusTimer._render();
@@ -104,21 +128,50 @@ const FocusTimer = window.FocusTimer = {
 
   reset() {
     FocusTimer.stop();
-    FocusTimer.remaining = 1500;
+    FocusTimer.remaining = FocusTimer.duration;
     FocusTimer._render();
     const completion = document.getElementById('timer-completion');
     if (completion) completion.classList.add('hidden');
   },
 
-  init() {
-    FocusTimer.remaining = 1500;
+  setDuration(minutes) {
+    const mins = parseInt(minutes, 10);
+    if (!mins || mins < 1 || mins > 120) return;
+    FocusTimer.stop();
+    FocusTimer.duration = mins * 60;
+    FocusTimer.remaining = FocusTimer.duration;
     FocusTimer._render();
+    Storage.set('timerDuration', mins);
+    const completion = document.getElementById('timer-completion');
+    if (completion) completion.classList.add('hidden');
+  },
+
+  init() {
+    const savedMins = Storage.get('timerDuration');
+    if (savedMins) {
+      FocusTimer.duration = savedMins * 60;
+    }
+    FocusTimer.remaining = FocusTimer.duration;
+    FocusTimer._render();
+
+    // Pre-fill duration input
+    const durationInput = document.getElementById('timer-duration-input');
+    if (durationInput) durationInput.value = FocusTimer.duration / 60;
+
     const startBtn = document.getElementById('timer-start');
     const stopBtn = document.getElementById('timer-stop');
     const resetBtn = document.getElementById('timer-reset');
     if (startBtn) startBtn.addEventListener('click', function () { FocusTimer.start(); });
     if (stopBtn) stopBtn.addEventListener('click', function () { FocusTimer.stop(); });
     if (resetBtn) resetBtn.addEventListener('click', function () { FocusTimer.reset(); });
+
+    const durationForm = document.getElementById('timer-duration-form');
+    if (durationForm) {
+      durationForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (durationInput) FocusTimer.setDuration(durationInput.value);
+      });
+    }
   },
 };
 
@@ -130,11 +183,17 @@ const TaskManager = window.TaskManager = {
 
   addTask(label) {
     const trimmed = label.trim();
-    if (!trimmed) return;
+    if (!trimmed) return false;
+    // Prevent duplicate (case-insensitive)
+    const duplicate = TaskManager.tasks.some(function (t) {
+      return t.label.toLowerCase() === trimmed.toLowerCase();
+    });
+    if (duplicate) return 'duplicate';
     const task = { id: String(Date.now()), label: trimmed, completed: false };
     TaskManager.tasks.push(task);
     TaskManager.save();
     TaskManager.render();
+    return true;
   },
 
   editTask(id, newLabel) {
@@ -228,13 +287,22 @@ const TaskManager = window.TaskManager = {
     TaskManager.tasks = Storage.get('tasks') ?? [];
     TaskManager.render();
     const form = document.getElementById('task-form');
+    const dupMsg = document.getElementById('task-duplicate-msg');
     if (form) {
       form.addEventListener('submit', function (e) {
         e.preventDefault();
         const input = document.getElementById('task-input');
         if (input) {
-          TaskManager.addTask(input.value);
-          input.value = '';
+          const result = TaskManager.addTask(input.value);
+          if (result === 'duplicate') {
+            if (dupMsg) {
+              dupMsg.classList.remove('hidden');
+              setTimeout(function () { dupMsg.classList.add('hidden'); }, 2500);
+            }
+          } else if (result === true) {
+            input.value = '';
+            if (dupMsg) dupMsg.classList.add('hidden');
+          }
         }
       });
     }
